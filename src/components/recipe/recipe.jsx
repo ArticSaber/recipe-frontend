@@ -60,11 +60,7 @@ const Recipe = ({ edit, add, view }) => {
       .then((response) => response.json())
       .catch((error) => console.log(error));
 
-    if (edit) {
-      navigate("/recipe/" + id);
-    } else {
-      navigate("/");
-    }
+    goBack();
   };
 
   const handleStepChange = (index, value) => {
