@@ -1,3 +1,12 @@
+.button-container {
+  display: flex;
+  gap: 4px;
+  button:nth-child(2) {
+    background-color: #f44336;
+    color: white;
+  }
+}
+
 .recipe-container {
   // width: 100dvw;
   min-height: 100dvh;
@@ -135,5 +144,57 @@ textarea {
   &:focus {
     outline: none;
     border: 1px solid darken(#dadada, 20%);
+  }
+}
+.back {
+  background-color: transparent !important;
+  text-decoration: none;
+  color: black;
+  max-width: min-content;
+  label {
+    cursor: pointer;
+  }
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+
+  padding: 0;
+}
+
+.nav-left {
+  display: flex;
+  gap: 4px;
+  span {
+    cursor: pointer;
+  }
+}
+
+.modal {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  backdrop-filter: blur(5px);
+  background-color: #dadadaa8;
+  &-container {
+    padding: 1rem;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  &-buttons {
+    padding-top: 1rem;
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+    button:nth-child(2) {
+      background-color: #f44336;
+      color: white;
+    }
   }
 }

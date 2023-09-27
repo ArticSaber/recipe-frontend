@@ -13,6 +13,7 @@ const Recipe = ({ edit, add, view }) => {
     steps: [],
   });
   const [image, setImage] = useState(null);
+  const [modal, setModal] = useState(false);
 
   const handleRecipe = async () => {
     await fetch(BASE_URL + "/" + id, {
@@ -27,13 +28,22 @@ const Recipe = ({ edit, add, view }) => {
       .catch((error) => console.log(error));
   };
 
+  const handleDelete = async () => {
+    await fetch(BASE_URL + "/" + id, {
+      cache: "no-store",
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .catch((error) => console.log(error));
+    navigate("/");
+  };
+
   const handleSave = async () => {
     const formData = new FormData();
     if (image) formData.append("image", image);
 
     for (const key in form) {
       if (key === "steps") {
-        console.log("here");
         formData.append("steps", JSON.stringify(form[key]));
         continue;
       } else if (key === "image") {
@@ -50,11 +60,11 @@ const Recipe = ({ edit, add, view }) => {
       .then((response) => response.json())
       .catch((error) => console.log(error));
 
-    // if (edit) {
-    //   navigate("/recipe/" + id);
-    // } else {
-    //   navigate("/");
-    // }
+    if (edit) {
+      navigate("/recipe/" + id);
+    } else {
+      navigate("/");
+    }
   };
 
   const handleStepChange = (index, value) => {
@@ -80,12 +90,30 @@ const Recipe = ({ edit, add, view }) => {
     }
   }, []);
 
+  const goBack = () => {
+    if (add || view) {
+      navigate("/");
+    } else {
+      navigate("/recipe/" + id);
+    }
+  };
+
   return (
     <div className="recipe-container">
       <div className="recipe-form">
         <div className="title">
-          {add ? "Create Recipe" : edit ? `Edit Recipe #${id}` : `Recipe #${id}`}
-          {view && <button onClick={() => navigate("edit")}>Edit</button>}
+          <div className="nav-left">
+            <span onClick={goBack}>{"<- "}</span>
+            {add
+              ? "Create Recipe"
+              : edit
+              ? `Edit Recipe #${id}`
+              : `Recipe #${id}`}
+          </div>
+          <div className="button-container">
+            {view && <button onClick={() => navigate("edit")}>Edit</button>}
+            {!add && <button onClick={() => setModal(true)}>Delete</button>}
+          </div>
         </div>
         <div className="input-container">
           <label htmlFor="title">Title: </label>
@@ -117,7 +145,9 @@ const Recipe = ({ edit, add, view }) => {
               <img
                 onClick={() => setImage(null)}
                 className="uploadedimg"
-                src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                src={
+                  typeof image === "string" ? image : URL.createObjectURL(image)
+                }
                 alt="uploaded image"
               />
             </div>
@@ -129,7 +159,11 @@ const Recipe = ({ edit, add, view }) => {
                   <img
                     onClick={() => setImage(null)}
                     className="uploadedimg"
-                    src={typeof image === "string" ? image : URL.createObjectURL(image)}
+                    src={
+                      typeof image === "string"
+                        ? image
+                        : URL.createObjectURL(image)
+                    }
                     alt="uploaded image"
                   />
                 </div>
@@ -171,7 +205,10 @@ const Recipe = ({ edit, add, view }) => {
                 onChange={(e) => handleStepChange(index, e.target.value)}
               />
               {!view && (
-                <button className="remove-step" onClick={() => handleRemoveStep(index)}>
+                <button
+                  className="remove-step"
+                  onClick={() => handleRemoveStep(index)}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="14"
@@ -196,6 +233,17 @@ const Recipe = ({ edit, add, view }) => {
         </div>
         {!view && <button onClick={handleSave}>Save</button>}
       </div>
+      {modal && (
+        <div className="modal">
+          <div className="modal-container">
+            Are you sure you want to delete this recipe?
+            <div className="modal-buttons">
+              <button onClick={() => setModal(false)}>Cancel</button>
+              <button onClick={handleDelete}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
