@@ -143,7 +143,6 @@ const Recipe = ({ edit, add, view }) => {
           {view && image && (
             <div className="uploaded-container">
               <img
-                onClick={() => setImage(null)}
                 className="uploadedimg"
                 src={
                   typeof image === "string" ? image : URL.createObjectURL(image)
